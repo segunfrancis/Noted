@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#fff"
+    tools:context=".AddNoteActivity">
+
+    <Spinner
+        android:id="@+id/category_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:entries="@array/spinner_items"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/note_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:textAlignment="viewStart"
+        android:fontFamily="monospace"
+        android:layout_marginTop="16dp"
+        android:hint="Type Note Here"
+        android:inputType="textMultiLine"
+        app:layout_constraintStart_toStartOf="@+id/category_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
+
+
+</LinearLayout>

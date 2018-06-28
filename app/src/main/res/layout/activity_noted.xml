@@ -22,7 +22,7 @@
             android:id="@+id/sign_in_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/desc_google_sign_in"
+            android:contentDescription="image"
             app:srcCompat="@drawable/icons8_news_480" />
     </LinearLayout>
 
