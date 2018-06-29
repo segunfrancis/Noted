@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +17,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,22 +33,26 @@ public class AddNoteActivity extends AppCompatActivity {
 
     private EditText mEditText;
     private Spinner mSpinner;
+    private RecyclerView mRecyclerView;
+    private NoteAdapter mRecyclerViewAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
 
     private DatabaseReference mFirebaseDatabase;
     private FirebaseDatabase mFirebaseInstance;
-    private DatabaseReference noteEntriesCloudEndPoint;
-    private DatabaseReference categoryCloudEndPoint;
-    private DatabaseReference dateCloudEndPoint;
 
-    private String userId;
+    private List<UserData> allUserData;
+
+    private final String NUM = "1";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
 
+        allUserData = new ArrayList<UserData>();
+
         mFirebaseInstance = FirebaseDatabase.getInstance();
-        mFirebaseDatabase = mFirebaseInstance.getReference();
+        mFirebaseDatabase = mFirebaseInstance.getReference(getString(R.string.app_name));
 
         /**
          * Enabling disk persistence for offline functionality
@@ -54,13 +63,12 @@ public class AddNoteActivity extends AppCompatActivity {
          * Setting App name to firebase database
          */
 
-        noteEntriesCloudEndPoint = mFirebaseDatabase.child("noteEntries");
-        categoryCloudEndPoint = mFirebaseDatabase.child("category");
-        dateCloudEndPoint = mFirebaseDatabase.child("date");
-
-        mEditText = findViewById(R.id.note_edittext);
-        mSpinner = findViewById(R.id.category_spinner);
-
+//        mEditText = findViewById(R.id.note_edittext);
+//        mSpinner = findViewById(R.id.category_spinner);
+//        mRecyclerView = findViewById(R.id.recyclerViewNotes);
+//
+//        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
+//        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
     }
 
@@ -73,19 +81,91 @@ public class AddNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        mEditText = findViewById(R.id.note_edittext);
+        mSpinner = findViewById(R.id.category_spinner);
         String note = mEditText.getText().toString();
         if (item.getItemId() == R.id.save) {
             if (note.isEmpty()) {
                 Toast.makeText(AddNoteActivity.this, "Empty note not saved", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(AddNoteActivity.this, NoteListActivity.class));
             } else {
-                onSaveItemClicked();
-                }
+//                onSaveItemClicked();
+
+                String noted = mEditText.getText().toString();
+                String category = mSpinner.getSelectedItem().toString();
+                String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
+                String currentTime = new SimpleDateFormat("h:mm a", Locale.getDefault()).format(new Date());
+
+                UserData userdata = new UserData(noted, category, currentTime, currentDate);
+
+                // pushing notes to userdata node using the userId
+                String key = mFirebaseDatabase.push().getKey();
+                mFirebaseDatabase.child(key).setValue(userdata);
+                mFirebaseDatabase.child(key).child("key").setValue(key);
+//          finish();
+
+                // noteEntriesCloudEndPoint.setValue(note);
+                // categoryCloudEndPoint.setValue(category);
+                Toast.makeText(AddNoteActivity.this, "Noted!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddNoteActivity.this, NoteListActivity.class));
+                finish();
+
+//                mFirebaseDatabase.addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                        getAllUserData(dataSnapshot);
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                        getAllUserData(dataSnapshot);
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                        noteDeletion(dataSnapshot);
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void onSaveItemClicked(){
+    private void getAllUserData(DataSnapshot dataSnapshot) {
+        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+            String notes = singleSnapshot.getValue(String.class);
+            String notes1 = singleSnapshot.getValue(String.class);
+            String notes2 = singleSnapshot.getValue(String.class);
+            String notes3 = singleSnapshot.getValue(String.class);
+            allUserData.add(new UserData(notes, notes1, notes2, notes3));
+            mRecyclerView = findViewById(R.id.recyclerView);
+            mRecyclerViewAdapter = new NoteAdapter(AddNoteActivity.this, allUserData);
+            mRecyclerView.setAdapter(mRecyclerViewAdapter);
+        }
+    }
+
+    private void noteDeletion(DataSnapshot dataSnapshot) {
+        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+            String notes = singleSnapshot.getValue(String.class);
+            for (int i = 0; i < allUserData.size(); i++) {
+                if (allUserData.get(i).getNote().equals(notes)) {
+                    allUserData.remove(i);
+                }
+            }
+        }
+    }
+
+    public void onSaveItemClicked() {
         int id = getTaskId();
         String note = mEditText.getText().toString();
         String category = mSpinner.getSelectedItem().toString();
@@ -95,20 +175,17 @@ public class AddNoteActivity extends AppCompatActivity {
         /**
          * Setting App name to firebase database
          */
-        mFirebaseDatabase.child("app_title").setValue(getString(R.string.app_name));
 
-        // Creating new user node, which returns the unique key value
-        // userId = mFirebaseDatabase.push().getKey();
-
-         UserData userdata = new UserData(id, note, category, currentTime, currentDate);
+        UserData userdata = new UserData(note, category, currentTime, currentDate);
 
         // pushing notes to userdata node using the userId
-         mFirebaseDatabase.push().setValue(userdata);
-         // finish();
+        mFirebaseDatabase.push().setValue(userdata);
+//          finish();
 
         // noteEntriesCloudEndPoint.setValue(note);
         // categoryCloudEndPoint.setValue(category);
         Toast.makeText(AddNoteActivity.this, "Noted!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(AddNoteActivity.this, NoteListActivity.class));
+        finish();
     }
 }
