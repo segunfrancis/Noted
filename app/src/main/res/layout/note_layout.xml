@@ -68,14 +68,14 @@
             tools:text="Music" />
 
         <ImageView
-            android:id="@+id/editIconView"
+            android:id="@+id/deleteIconView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:tint="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="@+id/noteTextView"
             app:layout_constraintTop_toBottomOf="@+id/noteTextView"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
+            app:srcCompat="@android:drawable/ic_menu_delete" />
 
             </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

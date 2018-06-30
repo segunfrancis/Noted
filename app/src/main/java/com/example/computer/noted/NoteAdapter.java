@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.firebase.ui.auth.ui.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,11 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
@@ -37,8 +33,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
 
-    public void addData(UserData data){
-      //  userData.add(data);
+    public void addData(UserData data) {
+        //  userData.add(data);
         ArrayList<UserData> temp = new ArrayList<>();
         temp.add(data);
         temp.addAll(userData);
@@ -60,9 +56,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
 
-    public static class ViewHolder extends  RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         protected View innerView;
+
         public ViewHolder(View itemView) {
             super(itemView);
             innerView = itemView;
@@ -76,11 +73,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         View card = holder.innerView;
 
 
-        TextView  noteView = card.findViewById(R.id.noteTextView);
-        TextView  categoryView = card.findViewById(R.id.categoryTextView);
-        TextView  dateView = card.findViewById(R.id.dateTextView);
+        TextView noteView = card.findViewById(R.id.noteTextView);
+        TextView categoryView = card.findViewById(R.id.categoryTextView);
+        TextView dateView = card.findViewById(R.id.dateTextView);
         TextView timeView = card.findViewById(R.id.timeTextView);
-        ImageView editIcon = card.findViewById(R.id.editIconView);
+        ImageView editIcon = card.findViewById(R.id.deleteIconView);
 
 
         noteView.setText(userData.get(position).getNote());
@@ -88,9 +85,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         dateView.setText(userData.get(position).getUpdatedAtDate());
         timeView.setText(userData.get(position).getUpdatedAtTime());
 
-       UserData currentUserData = userData.get(position);
+        UserData currentUserData = userData.get(position);
 
-       String key  =currentUserData.getKey();
+        String key = currentUserData.getKey();
 
         final int currentPosition = position;
         editIcon.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +99,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
                 notesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             snapshot.getRef().removeValue();
                         }
                     }

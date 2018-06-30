@@ -29,7 +29,7 @@ public  class NoteViewHolder extends RecyclerView.ViewHolder{
         categoryView = itemView.findViewById(R.id.categoryTextView);
         dateView = itemView.findViewById(R.id.dateTextView);
         timeView = itemView.findViewById(R.id.timeTextView);
-        editIcon = itemView.findViewById(R.id.editIconView);
+        editIcon = itemView.findViewById(R.id.deleteIconView);
 
         editIcon.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -42,6 +42,11 @@ public class NotedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_noted);
 
+        /**
+         * Enabling disk persistence for offline functionality
+         */
+        MyDatabaseUtil.getDatabase();
+
         button = findViewById(R.id.sign_in_button);
         mAuth = FirebaseAuth.getInstance();
 
@@ -87,12 +92,12 @@ public class NotedActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-            } else{
+            } else {
                 Toast.makeText(NotedActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
             }
         }

@@ -42,34 +42,21 @@ public class AddNoteActivity extends AppCompatActivity {
 
     private List<UserData> allUserData;
 
-    private final String NUM = "1";
+    static boolean calledAlready = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
 
+
         allUserData = new ArrayList<UserData>();
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference(getString(R.string.app_name));
 
-        /**
-         * Enabling disk persistence for offline functionality
-         */
+
         // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-        /**
-         * Setting App name to firebase database
-         */
-
-//        mEditText = findViewById(R.id.note_edittext);
-//        mSpinner = findViewById(R.id.category_spinner);
-//        mRecyclerView = findViewById(R.id.recyclerViewNotes);
-//
-//        mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
-//        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
     }
 
     @Override
