@@ -14,8 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        android:backgroundTint="@color/colorTextTertiary"
+        style="@style/mySpinnerItemStyle"
         android:entries="@array/spinner_items"
+        android:scrollbarStyle="insideInset"
+        android:gravity="start|center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +31,7 @@
         android:textColorHint="@color/colorText"
         android:textColor="@color/colorText"
         android:layout_marginTop="16dp"
-        android:hint="Type Note Here"
+        android:hint="@string/edit_text_hint"
         android:inputType="textMultiLine"
         app:layout_constraintStart_toStartOf="@+id/category_spinner"
         app:layout_constraintTop_toBottomOf="@+id/category_spinner" />

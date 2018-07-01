@@ -2,18 +2,16 @@
 <resources>
     <string name="app_name">Noted</string>
 
-    <string name="sign_in">Sign In</string>
-    <string name="create_account">Create Account</string>
-    <string name="send_link">Send Link</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="loading">Loading…</string>
-    <string name="signed_in">Signed In</string>
-    <string name="signed_out">Signed Out</string>
+    <!--Image Description-->
+    <string name="image_description">Noted Image</string>
+
+    <!--Sample Note for Noted App-->
     <string name="sample_note">Cloud Platform.
         Learn more about Cloud Firestore.Firebase Realtime Database Docs Guides Retrieving Data This document covers the basics of retrieving database data, how data is ordered, and how to perform simple querieson data.
         Data retrieval in the Admin SDK is implemented slightly differently across different programming languages.
     </string>
 
+    <!--Spinner Items-->
     <array name="spinner_items">
         <item>Uncategorized</item>
         <item>Business</item>
@@ -21,4 +19,7 @@
         <item>Entertainment</item>
         <item>Education</item>
     </array>
+
+    <!--EditText Hint-->
+    <string name="edit_text_hint">Type Note Here</string>
 </resources>

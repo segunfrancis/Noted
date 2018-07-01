@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -141,12 +142,10 @@ public class AddNoteActivity extends AppCompatActivity {
 
         // pushing notes to userdata node using the userId
         mFirebaseDatabase.push().setValue(userdata);
-//          finish();
 
-        // noteEntriesCloudEndPoint.setValue(noteView);
-        // categoryCloudEndPoint.setValue(category);
         Toast.makeText(AddNoteActivity.this, "Noted!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(AddNoteActivity.this, NoteListActivity.class));
         finish();
     }
+
 }
