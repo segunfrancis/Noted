@@ -8,14 +8,17 @@ import java.util.Map;
 
 public class UserData {
 
-//    public int id;
-    public String key;
-    public String note;
-    public String category;
-    public String updatedAtDate;
-    public String updatedAtTime;
+    public int id;
+    private String key;
+    private String note;
+    private String category;
+    private String updatedAtDate;
+    private String updatedAtTime;
 
-    // Default constructor required for calls to DataSnapshot.getValue(UserDate.class)
+
+    public UserData() {
+    }
+
     public UserData(String note, String category, String updatedAtTime, String updatedAtDate) {
         this("", note,category,updatedAtTime, updatedAtDate);
     }
@@ -28,60 +31,73 @@ public class UserData {
         this.updatedAtTime = updatedAtTime;
     }
 
-    public UserData() {
-    // Default constructor required for calls to DataSnapshot.getValue(UserDate.class)
+    public int getId() {
+        return id;
     }
 
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("key", key);
-        result.put("note", note);
-        result.put("category", category);
-        result.put("updatedAtTime", updatedAtTime);
-        result.put("updatedAtDate", updatedAtDate);
-
-        return result;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
+    public UserData(int id, String key, String note, String category, String updatedAtDate, String updatedAtTime) {
+        this.id = id;
         this.key = key;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
         this.note = note;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getUpdatedAtDate() {
-        return updatedAtDate;
-    }
-
-    public void setUpdatedAtDate(String updatedAtDate) {
         this.updatedAtDate = updatedAtDate;
-    }
-
-    public String getUpdatedAtTime() {
-        return updatedAtTime;
-    }
-
-    public void setUpdatedAtTime(String updatedAtTime) {
         this.updatedAtTime = updatedAtTime;
+
     }
 
+        @Exclude
+        public Map<String, Object> toMap () {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("key", key);
+            result.put("noteView", note);
+            result.put("category", category);
+            result.put("updatedAtTime", updatedAtTime);
+            result.put("updatedAtDate", updatedAtDate);
+
+            return result;
+        }
+
+        public String getKey () {
+            return key;
+        }
+
+        public void setKey (String key){
+            this.key = key;
+        }
+
+        public String getNote () {
+            return note;
+        }
+
+        public void setNote (String note){
+            this.note = note;
+        }
+
+        public String getCategory () {
+            return category;
+        }
+
+        public void setCategory (String category){
+            this.category = category;
+        }
+
+        public String getUpdatedAtDate () {
+            return updatedAtDate;
+        }
+
+        public void setUpdatedAtDate (String updatedAtDate){
+            this.updatedAtDate = updatedAtDate;
+        }
+
+        public String getUpdatedAtTime () {
+            return updatedAtTime;
+        }
+
+        public void setUpdatedAtTime (String updatedAtTime){
+            this.updatedAtTime = updatedAtTime;
+        }
 }

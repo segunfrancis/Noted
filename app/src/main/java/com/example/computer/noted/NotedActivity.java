@@ -1,10 +1,13 @@
 package com.example.computer.noted;
 
+import android.content.AsyncTaskLoader;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -36,6 +39,27 @@ public class NotedActivity extends AppCompatActivity {
 
         mAuth.addAuthStateListener(mAuthListener);
     }
+
+//    static class Task extends AsyncTask<String, Integer, Boolean> {
+//
+//        private static ProgressBar signInProgressIndicator;
+//        @Override
+//        protected void onPreExecute() {
+//            signInProgressIndicator.setVisibility(View.VISIBLE);
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean aBoolean) {
+//            signInProgressIndicator.setVisibility(View.INVISIBLE);
+//            super.onPostExecute(aBoolean);
+//        }
+//
+//        @Override
+//        protected Boolean doInBackground(String... strings) {
+//            return null;
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +102,8 @@ public class NotedActivity extends AppCompatActivity {
         })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions).build();
     }
+
+
 
 //    GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 //            .requestIdToken(getString(R.string.default_web_client_id))

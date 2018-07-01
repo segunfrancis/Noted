@@ -14,29 +14,33 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-public  class NoteViewHolder extends RecyclerView.ViewHolder{
+public  class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     public TextView noteView;
     public TextView categoryView;
     public TextView dateView;
     public TextView timeView;
-    public ImageView editIcon;
+    public ImageView deleteIcon;
+    public View recyclerView;
     private List<UserData> mUserData;
+    final private ItemClickListener mItemClickListener;
 
-    public NoteViewHolder(View itemView,  List<UserData> userData) {
+    public NoteViewHolder(View itemView,  List<UserData> userData, ItemClickListener listener) {
         super(itemView);
         this.mUserData = userData;
+        mItemClickListener = listener;
         noteView = itemView.findViewById(R.id.noteTextView);
         categoryView = itemView.findViewById(R.id.categoryTextView);
         dateView = itemView.findViewById(R.id.dateTextView);
         timeView = itemView.findViewById(R.id.timeTextView);
-        editIcon = itemView.findViewById(R.id.deleteIconView);
+        deleteIcon = itemView.findViewById(R.id.deleteIconView);
+        recyclerView = itemView.findViewById(R.id.recyclerView);
 
-        editIcon.setOnClickListener(new View.OnClickListener() {
+        deleteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String editNote = mUserData.get(getAdapterPosition()).getUpdatedAtTime();
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                Query notesQuery = ref.orderByChild("note").equalTo(editNote);
+                Query notesQuery = ref.orderByChild("noteView").equalTo(editNote);
                 notesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -52,5 +56,15 @@ public  class NoteViewHolder extends RecyclerView.ViewHolder{
                 });
             }
         });
+    }
+
+    public interface ItemClickListener {
+        void onItemClickListener(int itemId);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int elementId = mUserData.get(getAdapterPosition()).getId();
+        mItemClickListener.onItemClickListener(elementId);
     }
 }

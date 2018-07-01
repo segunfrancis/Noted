@@ -42,21 +42,23 @@ public class AddNoteActivity extends AppCompatActivity {
 
     private List<UserData> allUserData;
 
-    static boolean calledAlready = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
 
+        String editNote = getIntent().getStringExtra(DisplayNoteActivity.PUT_EXTRA_NOTE);
+        String editCategory = getIntent().getStringExtra(DisplayNoteActivity.PUT_EXTRA_CATEGORY);
+        mEditText = findViewById(R.id.note_edittext);
+        mSpinner = findViewById(R.id.category_spinner);
+        mEditText.setText(editNote, TextView.BufferType.EDITABLE);
+//        mSpinner.setSelected(R.id);
 
         allUserData = new ArrayList<UserData>();
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
         mFirebaseDatabase = mFirebaseInstance.getReference(getString(R.string.app_name));
 
-
-        // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     @Override
@@ -73,7 +75,7 @@ public class AddNoteActivity extends AppCompatActivity {
         String note = mEditText.getText().toString();
         if (item.getItemId() == R.id.save) {
             if (note.isEmpty()) {
-                Toast.makeText(AddNoteActivity.this, "Empty note not saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddNoteActivity.this, "Empty Note not saved", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(AddNoteActivity.this, NoteListActivity.class));
             } else {
 //                onSaveItemClicked();
@@ -91,38 +93,10 @@ public class AddNoteActivity extends AppCompatActivity {
                 mFirebaseDatabase.child(key).child("key").setValue(key);
 //          finish();
 
-                // noteEntriesCloudEndPoint.setValue(note);
-                // categoryCloudEndPoint.setValue(category);
                 Toast.makeText(AddNoteActivity.this, "Noted!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(AddNoteActivity.this, NoteListActivity.class));
                 finish();
 
-//                mFirebaseDatabase.addChildEventListener(new ChildEventListener() {
-//                    @Override
-//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                        getAllUserData(dataSnapshot);
-//                    }
-//
-//                    @Override
-//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                        getAllUserData(dataSnapshot);
-//                    }
-//
-//                    @Override
-//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                        noteDeletion(dataSnapshot);
-//                    }
-//
-//                    @Override
-//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
             }
         }
         return super.onOptionsItemSelected(item);
@@ -169,7 +143,7 @@ public class AddNoteActivity extends AppCompatActivity {
         mFirebaseDatabase.push().setValue(userdata);
 //          finish();
 
-        // noteEntriesCloudEndPoint.setValue(note);
+        // noteEntriesCloudEndPoint.setValue(noteView);
         // categoryCloudEndPoint.setValue(category);
         Toast.makeText(AddNoteActivity.this, "Noted!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(AddNoteActivity.this, NoteListActivity.class));

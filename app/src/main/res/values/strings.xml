@@ -9,6 +9,10 @@
     <string name="loading">Loading…</string>
     <string name="signed_in">Signed In</string>
     <string name="signed_out">Signed Out</string>
+    <string name="sample_note">Cloud Platform.
+        Learn more about Cloud Firestore.Firebase Realtime Database Docs Guides Retrieving Data This document covers the basics of retrieving database data, how data is ordered, and how to perform simple querieson data.
+        Data retrieval in the Admin SDK is implemented slightly differently across different programming languages.
+    </string>
 
     <array name="spinner_items">
         <item>Uncategorized</item>

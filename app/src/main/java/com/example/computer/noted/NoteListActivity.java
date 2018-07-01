@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,37 +24,36 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
 
-    private Button mLogOutButton;
-    private ImageView mDeleteIconView;
-
-    private FirebaseAuth mAuth;
+//    private Button mLogOutButton;
+    private ImageView mEditIconView;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private FloatingActionButton fabButton;
 
-    private List<UserData> mUserData;
-
     private RecyclerView mRecyclerView;
 
     private NoteAdapter mAdapter;
 
-//     private NoteAdapter.ItemClickListener itemClickListener;
+    private static final int RC_SIGN_IN = 234;
 
     private FirebaseDatabase mFirebasedatabase;
 
     private DatabaseReference mDatabaseReference;
 
     private TextView note, category, date, time;
+    private ImageView deleteImage;
 
-
-//    privateA AddDatabase mDb;
+    private FirebaseAuth mAuth;
+    private List<UserData> mUserData = new ArrayList<UserData>();
 
     @Override
     protected void onStart() {
@@ -66,7 +68,7 @@ public class NoteListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note_list);
 
         mUserData = new ArrayList<>(0);
-        mAdapter = new NoteAdapter(this, mUserData);
+        mAdapter = new NoteAdapter(getApplicationContext(), mUserData);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -81,12 +83,11 @@ public class NoteListActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mAdapter);
 
-//        prepareNoteData();
 
 //        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
 //        mRecyclerView.addItemDecoration(decoration);
 
-        mLogOutButton = findViewById(R.id.logout_button);
+//        mLogOutButton = findViewById(R.id.logout_button);
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -97,13 +98,6 @@ public class NoteListActivity extends AppCompatActivity {
                 }
             }
         };
-
-        mLogOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAuth.signOut();
-            }
-        });
 
         fabButton = findViewById(R.id.fab);
 
@@ -119,8 +113,10 @@ public class NoteListActivity extends AppCompatActivity {
         category = findViewById(R.id.categoryTextView);
         time = findViewById(R.id.timeTextView);
         date = findViewById(R.id.dateTextView);
+        deleteImage = findViewById(R.id.deleteIconView);
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mUserData.clear();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference ref = database.getReference().child("Noted");
 
 //        String key = ref.push().getKey();
@@ -129,39 +125,20 @@ public class NoteListActivity extends AppCompatActivity {
 //                .child("category")
 //                .setValue("");
 
-        ref.addChildEventListener(new ChildEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mUserData.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    //get value from postSnapshot to journal object
+                    UserData data = postSnapshot.getValue(UserData.class);
+                    UserData userData = new UserData(data.getNote(), data.getCategory(), data.getUpdatedAtDate(), data.getUpdatedAtTime());
+                    //add journal object to list used in recycler
+                    mUserData.add(userData);
 
-                try {
-                    UserData userData = dataSnapshot.getValue(UserData.class);
-
-                    userData.toMap();
-                    mAdapter.addData(userData);
-
-                } catch (NullPointerException e) {
-                    Toast.makeText(NoteListActivity.this, "Error casting Note", Toast.LENGTH_SHORT).show();
+                    //notify data changed to recyclerView
+                    mAdapter.notifyDataSetChanged();
                 }
-
-            }
-
-
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
-                    snapshot.getRef().removeValue();
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -169,56 +146,27 @@ public class NoteListActivity extends AppCompatActivity {
 
             }
         });
-
-        mDeleteIconView = findViewById(R.id.deleteIconView);
-        mDeleteIconView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                String key;
-                final DatabaseReference deleteRef = database.getReference().child("Noted");
-                deleteRef.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(NoteListActivity.this, "Deleted!", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(NoteListActivity.this, "An Error Occurred \n Try Again Later", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
     }
-
-
-
-    /*
-    * String editNote = mUserData.get(getAdapterPosition()).getUpdatedAtTime();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                Query notesQuery = ref.orderByChild("note").equalTo(editNote);
-                notesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
-                            snapshot.getRef().removeValue();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    * */
 
     //
     @Override
     protected void onResume() {
         super.onResume();
 
-//        prepareNoteData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.logout_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.logout){
+                    mAuth.signOut();
+                }
+        return super.onOptionsItemSelected(item);
     }
 }

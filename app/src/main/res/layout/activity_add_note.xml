@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="#fff"
+    android:background="@color/colorPrimaryDark"
     tools:context=".AddNoteActivity">
 
     <Spinner
@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
+        android:backgroundTint="@color/colorTextTertiary"
         android:entries="@array/spinner_items"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,9 +23,11 @@
         android:id="@+id/note_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
+        android:background="@color/colorPrimaryDark"
         android:textAlignment="viewStart"
         android:fontFamily="monospace"
+        android:textColorHint="@color/colorText"
+        android:textColor="@color/colorText"
         android:layout_marginTop="16dp"
         android:hint="Type Note Here"
         android:inputType="textMultiLine"
